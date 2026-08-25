@@ -1,0 +1,624 @@
+<title>Team 14 Battlebot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#EDEFE9; --surface:#F7F8F4; --sunk:#E3E7DC;
+  --ink:#14180F; --ink-2:#565D50; --ink-3:#7C8474;
+  --rule:#D2D7C9; --rule-2:#BFC6B4;
+  --red:#B93529; --red-soft:#F0DCD8;
+  --green:#38863E; --green-soft:#DCE9DA;
+  --amber:#9A6B12;
+  --shadow:0 1px 2px rgba(20,24,15,.06),0 8px 24px rgba(20,24,15,.05);
+  --display:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,"Cascadia Code","Courier New",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#121510; --surface:#1A1E16; --sunk:#0C0F09;
+    --ink:#E9ECE2; --ink-2:#9AA291; --ink-3:#79826F;
+    --rule:#2B3125; --rule-2:#3C4434;
+    --red:#E4604A; --red-soft:#3A1D18;
+    --green:#68C065; --green-soft:#162A16;
+    --amber:#D2A047;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121510; --surface:#1A1E16; --sunk:#0C0F09;
+  --ink:#E9ECE2; --ink-2:#9AA291; --ink-3:#79826F;
+  --rule:#2B3125; --rule-2:#3C4434;
+  --red:#E4604A; --red-soft:#3A1D18;
+  --green:#68C065; --green-soft:#162A16;
+  --amber:#D2A047;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--body); font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%; display:block}
+a{color:var(--red)}
+a:focus-visible,button:focus-visible,img:focus-visible{outline:2px solid var(--red); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:1340px; margin:0 auto; padding:0 32px}
+.col{max-width:64ch}
+h1,h2,h3,h4{font-family:var(--display); text-wrap:balance; margin:0; letter-spacing:-.02em}
+p{margin:0}
+
+.lbl{
+  font-family:var(--mono); font-size:11px; font-weight:700;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3);
+}
+
+/* ---------- top bar ---------- */
+.topbar{background:var(--ground); border-bottom:1px solid var(--rule)}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:20px; padding:13px 28px}
+.gh{display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink);
+  font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase}
+.gh svg{width:15px; height:15px; fill:currentColor; flex:none}
+.gh:hover{color:var(--red)}
+
+/* ---------- hero ---------- */
+.hero{border-bottom:1px solid var(--rule); background:var(--surface)}
+.hero-in{display:grid; grid-template-columns:1fr .82fr; gap:56px; align-items:center; padding:72px 0 64px}
+.hero h1{
+  font-size:clamp(52px,7.5vw,92px); font-weight:800; line-height:.94;
+  letter-spacing:-.035em; margin:18px 0 0;
+}
+.hero h1 .l2{display:block; color:var(--red)}
+.hero .deck{margin-top:26px; font-size:19px; line-height:1.6; color:var(--ink-2); max-width:46ch}
+.hero-fig img{width:100%; border-radius:3px; border:1px solid var(--rule-2); box-shadow:var(--shadow)}
+.rule-top{height:3px; background:var(--red); width:64px}
+
+.placard{
+  margin-top:34px; display:flex; flex-wrap:wrap; gap:0;
+  border:1px solid var(--rule-2); border-radius:3px; overflow:hidden; background:var(--ground);
+}
+.placard div{padding:12px 18px; border-right:1px solid var(--rule-2); flex:1 1 auto}
+.placard div:last-child{border-right:0}
+.placard dt{font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 4px}
+.placard dd{margin:0; font-family:var(--display); font-weight:700; font-size:15px; letter-spacing:-.01em;
+  white-space:nowrap}
+.dot{display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:7px; vertical-align:1px}
+.dot.g{background:var(--green)}
+
+/* ---------- sections ---------- */
+section{padding:76px 0; border-bottom:1px solid var(--rule)}
+.sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:12px}
+.sec-head .num{font-family:var(--mono); font-size:11px; font-weight:700; color:var(--red); letter-spacing:.1em}
+section h2{font-size:clamp(30px,4vw,42px); font-weight:800; line-height:1.06; letter-spacing:-.03em}
+.sub{margin-top:16px; color:var(--ink-2); font-size:18px}
+.body-copy{margin-top:26px; display:flex; flex-direction:column; gap:18px}
+.body-copy strong{font-weight:600; color:var(--ink)}
+
+/* ---------- split: prose beside spec grid ---------- */
+.split{margin-top:30px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.04fr); gap:56px; align-items:start}
+.split .body-copy{margin-top:0; max-width:62ch}
+.split .specs{margin-top:0}
+
+/* ---------- spec grid ---------- */
+.specs{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden}
+.spec{background:var(--surface); padding:20px 22px}
+.spec dt{margin:0 0 8px}
+.spec dd{margin:0; font-family:var(--display); font-size:17px; font-weight:600; line-height:1.35; letter-spacing:-.015em}
+.spec dd span{display:block; font-family:var(--mono); font-size:12px; font-weight:400; color:var(--ink-3);
+  margin-top:5px; letter-spacing:0}
+
+/* ---------- timeline ---------- */
+.tl{margin-top:48px; display:flex; flex-direction:column}
+.entry{display:grid; grid-template-columns:132px 1fr; gap:36px; padding:38px 0; border-top:1px solid var(--rule)}
+.entry:first-child{border-top:0; padding-top:8px}
+.date{font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:.06em; color:var(--red);
+  padding-top:4px; position:sticky; top:24px; align-self:start}
+.date span{display:block; color:var(--ink-3); font-weight:400; font-size:11px; margin-top:5px; letter-spacing:.1em}
+.entry h3{font-size:23px; font-weight:700; letter-spacing:-.02em}
+.entry p{margin-top:12px; color:var(--ink-2); max-width:60ch}
+.shots{margin-top:22px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px}
+figure{margin:0}
+figure img{width:100%; border-radius:3px; border:1px solid var(--rule-2); background:var(--sunk)}
+figcaption{margin-top:9px; font-family:var(--mono); font-size:11px; line-height:1.5; color:var(--ink-3)}
+img[data-zoom]{cursor:zoom-in}
+.clips{margin-top:14px; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px}
+.clips video{width:100%; max-height:440px; object-fit:contain; display:block; background:#0A0C08;
+  border-radius:3px; border:1px solid var(--rule-2)}
+
+/* ---------- pwm band ---------- */
+.band-wrap{margin-top:36px; padding:30px 28px 22px; background:var(--surface);
+  border:1px solid var(--rule); border-radius:3px; overflow-x:auto}
+.band-inner{min-width:640px}
+.band{position:relative; height:46px; display:flex; border-radius:2px; overflow:hidden; border:1px solid var(--rule-2)}
+.band i{display:block; height:100%; font-style:normal}
+.band .rev{width:40.3%; background:var(--red-soft)}
+.band .dead{width:19.6%; background:var(--sunk)}
+.band .fwd{width:40.1%; background:var(--green-soft)}
+.tick{position:absolute; top:0; bottom:0; width:2px; background:var(--ink); opacity:.55}
+.tick.cap{background:var(--amber); opacity:1}
+.band-zone{display:flex; margin-top:12px; font-family:var(--mono); font-size:10.5px; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.band-zone i{font-style:normal; text-align:center}
+.band-lbls{position:relative; height:40px; margin-top:10px}
+.band-lbls b{position:absolute; transform:translateX(-50%); font-family:var(--mono); font-size:11px;
+  font-weight:700; color:var(--ink-2); white-space:nowrap; text-align:center; line-height:1.5}
+.band-lbls b.edge-l{transform:translateX(0); text-align:left}
+.band-lbls b.edge-r{transform:translateX(-100%); text-align:right}
+.band-lbls b em{display:block; font-style:normal; font-weight:400; color:var(--ink-3); font-size:10px}
+.band-note{margin-top:16px; font-family:var(--mono); font-size:11.5px; color:var(--ink-3); line-height:1.8}
+.band-note b{color:var(--amber)}
+
+/* ---------- tables ---------- */
+.tbl-wrap{margin-top:30px; overflow-x:auto; border:1px solid var(--rule); border-radius:3px}
+table{border-collapse:collapse; width:100%; min-width:520px; background:var(--surface)}
+th,td{text-align:left; padding:13px 18px; border-bottom:1px solid var(--rule); font-size:14px}
+th{font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); background:var(--sunk)}
+td{font-family:var(--body); color:var(--ink-2)}
+td:first-child{font-family:var(--mono); font-size:12.5px; font-weight:500; color:var(--ink)}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--display); font-weight:600; color:var(--ink); font-variant-numeric:tabular-nums}
+td.n{font-family:var(--mono); font-size:13px; text-align:right; font-variant-numeric:tabular-nums; color:var(--ink)}
+th.n{text-align:right}
+tr.grp td{background:var(--sunk); font-family:var(--mono); font-size:10.5px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+tr.tot td{font-family:var(--display); font-weight:700; color:var(--ink); font-size:15px}
+tr.tot td.n{font-family:var(--mono); font-weight:700; font-size:14px; color:var(--red)}
+tr.tot.here td.n{color:var(--green)}
+
+/* ---------- lessons ---------- */
+.lessons{margin-top:40px; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px}
+.lesson{background:var(--surface); border:1px solid var(--rule); border-left:3px solid var(--red);
+  border-radius:3px; padding:22px 24px}
+.lesson h4{font-size:16px; font-weight:700; letter-spacing:-.015em; margin-bottom:10px}
+.lesson p{font-size:15px; color:var(--ink-2); line-height:1.6}
+code{font-family:var(--mono); font-size:12.5px; background:var(--sunk); padding:1px 5px; border-radius:2px;
+  color:var(--ink)}
+
+/* ---------- internal ---------- */
+.internal{background:var(--sunk)}
+.flag{display:inline-flex; align-items:center; gap:9px; padding:6px 13px; border-radius:2px;
+  background:var(--amber); color:#FFF; font-family:var(--mono); font-size:10.5px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; margin-bottom:20px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .flag{color:#191203}}
+:root[data-theme="dark"] .flag{color:#191203}
+.checklist{margin:30px 0 0; padding:0; list-style:none}
+.checklist li{display:grid; grid-template-columns:120px 1fr; gap:20px; padding:16px 0;
+  border-top:1px solid var(--rule-2); align-items:baseline}
+.checklist li:first-child{border-top:0}
+.checklist .k{font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em;
+  color:var(--ink-3); text-transform:uppercase; padding-top:3px; white-space:nowrap}
+.checklist p{font-size:15.5px; color:var(--ink-2)}
+.checklist b{font-family:var(--display); font-weight:600; color:var(--ink); font-size:16px;
+  display:block; margin-bottom:4px; letter-spacing:-.015em}
+
+/* ---------- lightbox ---------- */
+#lb[hidden]{display:none}
+#lb{position:fixed; inset:0; z-index:100; background:rgba(8,10,6,.94); padding:40px 24px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px}
+#lb img{max-width:min(1280px,94vw); max-height:80vh; width:auto; border-radius:3px; object-fit:contain;
+  cursor:zoom-out}
+#lb figcaption{font-family:var(--mono); font-size:12px; line-height:1.6; color:#C6CCBC;
+  max-width:72ch; text-align:center; margin:0}
+#lb button{position:absolute; top:18px; right:22px; width:42px; height:42px; cursor:pointer;
+  background:transparent; border:1px solid rgba(255,255,255,.38); border-radius:3px;
+  color:#FFF; font-family:var(--display); font-size:22px; line-height:1}
+#lb button:hover{background:rgba(255,255,255,.12)}
+
+/* ---------- footer ---------- */
+footer{padding:56px 0 72px; background:var(--surface)}
+.foot{display:flex; flex-wrap:wrap; gap:28px; justify-content:space-between; align-items:flex-end}
+.repo-btn{display:inline-flex; align-items:center; gap:10px; padding:13px 22px; background:var(--ink);
+  color:var(--ground); text-decoration:none; border-radius:3px; font-family:var(--display);
+  font-weight:600; font-size:15px; letter-spacing:-.01em}
+.repo-btn svg{width:17px; height:17px; fill:currentColor}
+.repo-btn:hover{background:var(--red); color:#FFF}
+.foot .lbl{line-height:1.9}
+
+@media (max-width:860px){
+  .hero-in{grid-template-columns:1fr; gap:40px; padding:52px 0 48px}
+  .split{grid-template-columns:1fr; gap:34px}
+  .checklist li{grid-template-columns:1fr; gap:7px}
+  .entry{grid-template-columns:1fr; gap:14px}
+  .date{position:static}
+  section{padding:56px 0}
+  body{font-size:16px}
+  .topbar-in .lbl{display:none}
+  .topbar-in{justify-content:flex-end}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important; transition:none !important}}
+</style>
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <span class="lbl">Team 14 &middot; UMass Robotics Club</span>
+    <a class="gh" href="https://github.com/JashKotadiya/Battlebots-Team-14">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      Firmware on GitHub
+    </a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <div class="rule-top"></div>
+      <p class="lbl" style="margin-top:16px">UMass Robotics Club &middot; UMass Amherst &middot; Team 14</p>
+      <h1>Battlebot<span class="l2">Team 14</span></h1>
+      <p class="deck">A 3D-printed antweight full-body shell spinner. The whole outer ring is the weapon: a brushless motor drives a pinion into gear teeth printed around its inner wall, spinning the shell around a two-wheel drive base.</p>
+      <dl class="placard">
+        <div><dt>Class</dt><dd>Antweight</dd></div>
+        <div><dt>Drive</dt><dd><span class="dot g"></span>Tested</dd></div>
+        <div><dt>Weapon</dt><dd><span class="dot g"></span>Tested</dd></div>
+        <div><dt>Power</dt><dd>4S 380 mAh HV LiPo</dd></div>
+      </dl>
+    </div>
+    <div class="hero-fig">
+      <img data-zoom src="assets/12-current-hero.jpg" alt="The Team 14 battlebot on a hardwood floor: a red 3D-printed spinning shell with a pointed tooth, containing a green inner chassis with an ESP32, a blue brushless weapon motor, ESCs and wiring.">
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="num">01</span><h2>What we built</h2></div>
+    <div class="split">
+      <div class="body-copy">
+      <p>Team 14 built this robot from the frame up at the <strong>UMass Robotics Club</strong> at UMass Amherst. It is an antweight combat robot, and <strong>almost every structural part is 3D-printed</strong>: the inner drive base that carries the motors and electronics, and the outer shell that doubles as the weapon. The frame went through several revisions across the build, each one printed, test-fit, and cut down to make room for hardware that turned out bigger than the model.</p>
+      <p>The weapon is the whole outer ring. Gear teeth are printed around its inner wall, and a pinion on the brushless motor meshes into them, so the entire shell spins around the drive base: a <strong>full-body shell spinner</strong>. Mass, armor, and weapon are all the same part, which is what makes the layout worth the packaging headache.</p>
+      <p>Everything electrical was hand-assembled. Motor leads, battery harness, connectors, and signal lines were <strong>soldered by the team</strong> and validated on a bench supply before anything was trusted to a LiPo. An ESP32 runs custom C++ firmware into two controllers: a dual-channel brushed board for the wheels, and a 35 A BLHeli_S ESC for the shell.</p>
+      <p>Control is an <strong>Xbox controller over Bluetooth</strong>. The bot was <strong>driven and weapon-tested on campus in spring 2026</strong>.</p>
+      </div>
+
+      <dl class="specs">
+      <div class="spec"><dt class="lbl">Class</dt><dd>Antweight<span>Combat robot</span></dd></div>
+      <div class="spec"><dt class="lbl">Controller</dt><dd>ESP32<span>Bluepad32 library</span></dd></div>
+      <div class="spec"><dt class="lbl">Gamepad</dt><dd>Xbox over Bluetooth<span>Any Bluepad32-supported pad</span></dd></div>
+      <div class="spec"><dt class="lbl">Drive</dt><dd>2x brushed<span>GPIO 12 &amp; 14 &middot; independent</span></dd></div>
+      <div class="spec"><dt class="lbl">Weapon</dt><dd>Full-body shell spinner<span>GPIO 18 &middot; pinion into ring gear</span></dd></div>
+      <div class="spec"><dt class="lbl">Weapon ESC</dt><dd>Readytosky 35 A<span>BLHeli_S &middot; 2 to 6S</span></dd></div>
+      <div class="spec"><dt class="lbl">Drive ESC</dt><dd>Dual brushed<span>2x2 A &middot; 2 to 30 V</span></dd></div>
+      <div class="spec"><dt class="lbl">Power</dt><dd>4S HV LiPo<span>Gaoneng GNB 380 mAh &middot; 15.2 V &middot; 90C</span></dd></div>
+      <div class="spec"><dt class="lbl">Chassis</dt><dd>3D-printed PLA<span>Drive base + toothed shell</span></dd></div>
+      <div class="spec"><dt class="lbl">Signal</dt><dd>14-bit @ 50 Hz<span>20 ms servo-style PWM</span></dd></div>
+      <div class="spec"><dt class="lbl">Firmware</dt><dd>284 lines C++<span>Arduino &middot; ESP32 LEDC</span></dd></div>
+      <div class="spec"><dt class="lbl">Cost</dt><dd>$101.61<span>Parts, as built</span></dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="num">02</span><h2>Build log</h2></div>
+    <p class="sub col">From bare motors on a bench in the fall to a driving machine the following spring, and the hardware as it stands today. Dated stages are anchored to the timestamps on the build photography.</p>
+
+    <div class="tl">
+
+      <article class="entry">
+        <div class="date">FALL<span>2025</span></div>
+        <div>
+          <h3>Motors, power, and turning logic</h3>
+          <p>The project started a full semester before the frame existed. Most of the fall went into fundamentals: driving bare motors from the ESP32, getting a battery wired in safely, and working out the turning logic so that a stick input produced the right response on each side. Getting two motors to spin the correct directions on command, repeatably, was the milestone everything afterward was built on.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="date">APR 23<span>2026</span></div>
+        <div>
+          <h3>Electronics bring-up</h3>
+          <p>Before any of it went into a chassis, the ESP32 was brought up on a breadboard with the power harness built out separately: XT connectors, a switched battery lead, and motor lines fanned out so each could be probed on its own. The bench was set up with a soldering station and helping-hands for the connector work.</p>
+          <div class="shots">
+            <figure><img data-zoom src="assets/01-esp32-harness.jpg" alt="ESP32 development board on a white breadboard, wired to a battery harness with XT connectors and red, black, blue and yellow leads."><figcaption>ESP32 on the breadboard with the battery harness and XT connectors broken out.</figcaption></figure>
+            <figure><img data-zoom src="assets/02-lab-bench.jpg" alt="A workbench with a yellow soldering station, solder spool, helping-hands clamp holding a motor bracket over an orange cutting mat, a laptop, and a fume extractor."><figcaption>The bench: soldering station, fume extractor, and a motor bracket clamped up for lead work.</figcaption></figure>
+          </div>
+          <div class="clips">
+            <figure class="vid"><video controls muted playsinline preload="none" poster="assets/vid-wire-prep-poster.jpg"><source src="assets/vid-wire-prep.mp4" type="video/mp4"></video><figcaption>Cutting into a battery lead to strip it back for soldering. Every connector and lead on the bot was made by hand.</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="date">APR 26<span>2026</span></div>
+        <div>
+          <h3>Power and the first rolling frame</h3>
+          <p>Packs were balance-charged on a dedicated LiPo charger and checked before use, a habit that matters when the battery lives inside a machine that gets hit. The same day, the first version of the printed chassis was wired up and rolling on two wheels, with the electronics loose inside to check clearances.</p>
+          <div class="shots">
+            <figure><img data-zoom src="assets/03-lipo-charging.jpg" alt="A HotRC LiPo balance charger with a digital display, connected to a Gaoneng GNB 380 mAh 4S high-voltage LiPo battery pack on a wooden surface."><figcaption>Balance-charging the Gaoneng GNB 380 mAh 4S HV pack before a test session.</figcaption></figure>
+            <figure><img data-zoom src="assets/04-chassis-v1.jpg" alt="An early green 3D-printed chassis with two white wheels, packed with a loose bundle of red, yellow and black wires and a small driver board."><figcaption>First rolling frame, electronics loose inside to check what actually fits.</figcaption></figure>
+          </div>
+          <div class="clips">
+            <figure class="vid"><video controls muted playsinline preload="none" poster="assets/vid-chassis-driving-poster.jpg"><source src="assets/vid-chassis-driving.mp4" type="video/mp4"></video><figcaption>The first rolling frame under power. The cable is USB feeding the motors directly, before any battery was on board.</figcaption></figure>
+            <figure class="vid"><video controls muted playsinline preload="none" poster="assets/vid-printing-poster.jpg"><source src="assets/vid-printing.mp4" type="video/mp4"></video><figcaption>A part coming off the Prusa CORE ONE. Nearly every structural piece on the bot was printed in house.</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="date">MAY 01<span>2026</span></div>
+        <div>
+          <h3>Drivetrain integration and bench validation</h3>
+          <p>The full parts set was laid out and dry-fit: printed chassis with both brushed drive motors seated, ESP32, wheels, and the LiPo pack. Motors and switching were validated on a benchtop DC supply with current limiting rather than straight off a battery.</p>
+          <p>The weapon controller was the real problem. There was no proper board, and no guarantee one was ever coming, so the team pivoted and <strong>built their own</strong>: a switching circuit on a breadboard put together from a MOSFET, a diode and a resistor, driven by the ESP32 and proved against a motor scavenged on campus. <strong>Nobody on the team had built a motor controller before.</strong> It worked anyway. That circuit is what the clip below is running, and it carried the weapon channel until a proper kit, board and motor were finally secured. Nothing on the bot uses a MOSFET today.</p>
+          <div class="shots">
+            <figure><img data-zoom src="assets/05-dry-fit.jpg" alt="Parts laid out on a wooden bench: a green 3D-printed chassis with two brushed motors mounted inside and white wheels, an ESP32 board, an ESC, a Gaoneng LiPo pack, and a spare brushed motor."><figcaption>Dry fit: chassis, both drive motors, ESP32, ESC and the LiPo pack.</figcaption></figure>
+            <figure><img data-zoom src="assets/06-bench-supply.jpg" alt="A blue and grey dual-output benchtop DC power supply with two red LED displays showing voltage and current."><figcaption>Benchtop supply with current limiting, used instead of a pack for first power-on.</figcaption></figure>
+            <figure><img data-zoom src="assets/07-mosfet-test.jpg" alt="A breadboard with a transistor and blue and yellow jumper wires, next to a Gaoneng LiPo battery and a motor."><figcaption>Building our own weapon motor controller from scratch: MOSFET, diode, resistor, worked out as we went.</figcaption></figure>
+            <figure><img data-zoom src="assets/08-bench-test.jpg" alt="A full bench test setup on a white table: breadboard with jumper wires, alligator clip leads, a regulator board, and a small motor wired in."><figcaption>The improvised controller driven by the ESP32, turning a motor scavenged on campus.</figcaption></figure>
+            <figure><img data-zoom src="assets/17-mosfet-bench.jpg" alt="Close view of a MOSFET seated in a breadboard with a red alligator clip and yellow and blue jumper wires attached."><figcaption>The switching stage the team designed to replace an ESC they did not have.</figcaption></figure>
+            <figure><img data-zoom src="assets/18-mosfet-lab.jpg" alt="A MOSFET wired into a breadboard on a lab bench with an alligator clip and jumper leads, a team member working in the background."><figcaption>Testing the improvised controller on the bench in the lab.</figcaption></figure>
+          </div>
+          <div class="clips">
+            <figure class="vid"><video controls muted playsinline preload="none" poster="assets/vid-bench-test-poster.jpg"><source src="assets/vid-bench-test.mp4" type="video/mp4"></video><figcaption>The improvised MOSFET controller running: the ESP32 spinning the scavenged weapon motor.</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="date">MAY 08<span>2026</span></div>
+        <div>
+          <h3>Firmware locked, machine driving</h3>
+          <p>The working firmware was committed to <a href="https://github.com/JashKotadiya/Battlebots-Team-14">Battlebots-Team-14</a> as the driving build: arcade drive with trigger throttle and brake, stick steering, ramped acceleration, a speed-capped shell on its own ramp, a latching emergency stop, and an automatic failsafe if the controller drops. The pulse-width constants in this build are the retuned set, replacing an earlier band that caused the drive to jam.</p>
+          <p>This is the machine that commit drove: green drive base carrying the wheel motors, ESP32, ESCs and pack, seated inside the toothed red shell. Fitting all of it inside the ring took cuts into the printed frame, the clearest thing the next revision needs to fix.</p>
+          <div class="shots">
+            <figure><img data-zoom src="assets/09-final-bench.jpg" alt="Top-down view of the assembled battlebot on a workbench next to safety glasses: red circular printed spinning shell containing the green chassis, brushless motor, ESCs and wiring."><figcaption>Assembled on the bench, safety glasses in frame, weapon testing rules.</figcaption></figure>
+            <figure><img data-zoom src="assets/10-final-top.jpg" alt="Overhead view of the battlebot showing the red shell, green inner chassis, brushless outrunner motor, ESC, and a dense bundle of yellow, white, red and black wiring."><figcaption>Overhead: the packing density that drove the frame cuts.</figcaption></figure>
+          </div>
+          <div class="clips">
+            <figure class="vid"><video controls muted playsinline preload="none" poster="assets/vid-controller-drive-poster.jpg"><source src="assets/vid-controller-drive.mp4" type="video/mp4"></video><figcaption>Bench test of the control link: the pad is paired over Bluetooth and the motors answer the inputs.</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="date">AUG 24<span>2026</span></div>
+        <div>
+          <h3>Current condition</h3>
+          <p>The bot as it stands today, between seasons. The underside is the clearest look at how the weapon works: gear teeth run the full inner circumference of the red shell, and the black pinion at the lower right meshes straight into them. The bolted green plate is the floor of the drive base, with a wheel visible at each end.</p>
+          <div class="shots">
+            <figure><img data-zoom src="assets/16-current-underside.jpg" alt="Underside of the battlebot: the red ring shows fine gear teeth printed around its entire inner wall, with a black pinion gear on a metal shaft meshing into them, and a green bolted base plate between two dark treaded wheels."><figcaption>Underside: printed ring gear around the shell, pinion meshing at lower right.</figcaption></figure>
+            <figure><img data-zoom src="assets/15-current-internals.jpg" alt="Close-up inside the bot showing a Readytosky 35A BLHeli_S electronic speed controller, a blue brushless outrunner motor, a brushed drive motor, a small blue dual brushed ESC, and dense wiring."><figcaption>Internals: the 35 A BLHeli_S weapon ESC, blue outrunner, and the dual brushed drive board.</figcaption></figure>
+            <figure><img data-zoom src="assets/13-current-profile.jpg" alt="Low side-profile view of the battlebot on a hardwood floor, showing the height and wall thickness of the red printed shell with electronics visible above the rim."><figcaption>Side profile: shell height and wall thickness.</figcaption></figure>
+            <figure><img data-zoom src="assets/14-current-quarter.jpg" alt="Three-quarter view of the battlebot showing the blue brushless weapon motor, the ESP32 on the green chassis, wiring, and a drive wheel inside the red shell."><figcaption>Three-quarter: weapon motor, ESP32 and a drive wheel in one frame.</figcaption></figure>          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="num">03</span><h2>Control system</h2></div>
+    <p class="sub col">The firmware drives three PWM channels, two wheels and the shell, off the ESP32's LEDC hardware at 14-bit resolution and 50 Hz: a 20 ms period, the standard servo and ESC frame.</p>
+
+    <div class="col body-copy">
+      <p>The bot is driven with an <strong>Xbox controller paired over Bluetooth</strong>, handled on the ESP32 by the <code>Bluepad32</code> library. Because the input mapping is written against that library rather than against one specific pad, <strong>any Bluetooth controller Bluepad32 supports</strong> will drive the machine with no firmware change.</p>
+    </div>
+
+    <div class="band-wrap">
+      <div class="band-inner">
+        <p class="lbl" style="margin-bottom:14px">Duty-cycle map &middot; 14-bit @ 50 Hz</p>
+        <div class="band">
+          <i class="rev"></i><i class="dead"></i><i class="fwd"></i>
+          <span class="tick" style="left:49.9%"></span>
+          <span class="tick cap" style="left:77.0%"></span>
+        </div>
+        <div class="band-zone">
+          <i style="width:40.3%">Reverse</i><i style="width:19.6%">Deadband</i><i style="width:40.1%">Forward</i>
+        </div>
+        <div class="band-lbls">
+          <b class="edge-l" style="left:0%">820<em>1.00 ms</em></b>
+          <b style="left:40.3%">1150<em>1.40 ms</em></b>
+          <b style="left:49.9%">1228<em>neutral</em></b>
+          <b style="left:59.9%">1310<em>1.60 ms</em></b>
+          <b style="left:77.0%">1450<em>shell cap</em></b>
+          <b class="edge-r" style="left:100%">1638<em>2.00 ms</em></b>
+        </div>
+        <p class="band-note">
+          <b>1450</b> is the deliberate shell ceiling: the weapon channel is held roughly 23% below the drive channels' full-forward value.<br>
+          The same <b>820</b> that means full reverse on a drive channel means <b>shell stopped</b> on the weapon channel.
+        </p>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Input</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Right trigger</td><td><b>Throttle</b>, analog, scaled to 0 to 100%</td></tr>
+          <tr><td>Left trigger</td><td><b>Brake and reverse</b>, subtracted from throttle</td></tr>
+          <tr><td>Left stick X</td><td><b>Steering</b>, mixed at half authority into both tracks</td></tr>
+          <tr><td>X button</td><td><b>Shell spin</b>, hold to spool the shell up to its capped ceiling</td></tr>
+          <tr><td>O button</td><td><b>Emergency stop</b>, press to latch on, press again to clear</td></tr>
+          <tr><td>Controller drop</td><td><b>Automatic failsafe</b>, drive to neutral and shell off</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Parameter</th><th>Value</th><th>Why it is set there</th></tr></thead>
+        <tbody>
+          <tr><td>Deadzone</td><td><b>15%</b></td><td>Ignores resting drift on the triggers and stick</td></tr>
+          <tr><td>Accel step</td><td><b>3.0</b> / tick</td><td>Smooth spin-up; avoids current spikes off the line</td></tr>
+          <tr><td>Decel step</td><td><b>15.0</b> / tick</td><td>5x faster than accel, so braking stays responsive</td></tr>
+          <tr><td>Shell spool-up</td><td><b>4.0</b> / tick</td><td>Controlled ramp rather than instant full throttle</td></tr>
+          <tr><td>Shell spin-down</td><td><b>20.0</b> / tick</td><td>5x the spool-up rate, so it stops fast when released</td></tr>
+          <tr><td>Steering authority</td><td><b>0.5</b></td><td>Halved so full stick deflection cannot overwhelm throttle</td></tr>
+          <tr><td>Arming hold</td><td><b>2000 ms</b></td><td>Holds the arming pulse long enough for every ESC to accept it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="num">04</span><h2>Platform and cost</h2></div>
+    <div class="col body-copy">
+      <p>The robot was costed as a <strong>modular kit</strong> rather than a one-off. Every build shares the same base: a brushed drive bundle, an ESP32, and a pack. From there a team chooses a weapon module, and the same firmware and drive base carry over either way.</p>
+      <p>Team 14 built the <strong>spinner configuration</strong>, which comes to <strong>$101.61 in parts</strong>. Buying the ESP32 boards twelve at a time brought the controller cost down to about $4 per robot.</p>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Part</th><th>Qty</th><th class="n">Cost</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">Base platform, every kit</td></tr>
+          <tr><td>Antweight brushed drive bundle</td><td>1 bundle</td><td class="n">$51.00</td></tr>
+          <tr><td>ESP32, bought as a 12-pack</td><td>1 board</td><td class="n">$4.16</td></tr>
+          <tr><td>4S 380 mAh 90C LiPo</td><td>1 battery</td><td class="n">$12.95</td></tr>
+          <tr class="tot"><td>Base kit</td><td></td><td class="n">$68.11</td></tr>
+
+          <tr class="grp"><td colspan="3">Spinner add-on, the configuration Team 14 built</td></tr>
+          <tr><td>Direct Drive weapon motor</td><td>1 motor</td><td class="n">$20.00</td></tr>
+          <tr><td>Weapon ESC</td><td>1 ESC</td><td class="n">$13.50</td></tr>
+          <tr class="tot"><td>Spinner add-on</td><td></td><td class="n">$33.50</td></tr>
+
+          <tr class="tot here"><td>Total, as built</td><td></td><td class="n">$101.61</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="num">05</span><h2>What we learned</h2></div>
+    <p class="sub col">Every one of these came out of something that did not work the first time.</p>
+    <div class="lessons">
+      <div class="lesson">
+        <h4>Build the part you cannot buy</h4>
+        <p>There was no weapon ESC and no guarantee of getting one. With <strong>no prior experience building motor control circuits</strong>, the team designed and bench-proved their own from a MOSFET, a diode and a resistor, and ran the weapon on it. A missing part turned out to be a design problem, not a dead end.</p>
+      </div>
+      <div class="lesson">
+        <h4>ESCs arm on a pulse, not on silence</h4>
+        <p>Writing a <code>0</code> duty cycle does not arm an ESC; it reads as no signal at all. The weapon ESC only came alive once it was fed a real 1.0 ms pulse and held there for two full seconds before anything else ran.</p>
+      </div>
+      <div class="lesson">
+        <h4>The first pulse band caused jamming</h4>
+        <p>An earlier set of pulse-width constants put the deadband in the wrong place and the drive would bind. Retuning the band, and widening the neutral zone around <code>1228</code>, fixed it.</p>
+      </div>
+      <div class="lesson">
+        <h4>Ramp the drive, not just the weapon</h4>
+        <p>Stepping straight to full duty slams current and makes the bot undriveable. Ramping acceleration while letting deceleration stay fast gave a machine that is smooth to launch and still stops sharply.</p>
+      </div>
+      <div class="lesson">
+        <h4>Cap the weapon in firmware</h4>
+        <p>The shell ceiling is a constant in code, not a mechanical limit. When the weapon is the entire outer ring, being able to lower a number and reflash was the difference between a testable machine and one nobody wanted to switch on.</p>
+      </div>
+      <div class="lesson">
+        <h4>Validate on a bench supply first</h4>
+        <p>Current-limited bench power caught wiring mistakes that a LiPo would have answered with smoke. Nothing touched a pack until it had already run on the supply.</p>
+      </div>
+      <div class="lesson">
+        <h4>Never block the control loop</h4>
+        <p>The loop runs on a 20 ms timer check rather than <code>delay()</code>, so controller input and the failsafe keep being serviced while motors update. A blocking delay in a combat robot means a bot that ignores the stop button.</p>
+      </div>
+      <div class="lesson">
+        <h4>Model the wiring, not just the parts</h4>
+        <p>The frame was designed around the components and not the loom. Connector bodies, service loops and bend radius are what actually consumed the volume, and what forced cuts into finished prints.</p>
+      </div>
+      <div class="lesson">
+        <h4>Failsafe on disconnect is not optional</h4>
+        <p>If the gamepad drops, the firmware neutralises drive and kills the weapon on its own. Without it, a Bluetooth dropout leaves a spinning shell that nobody is holding the controller for.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="internal">
+  <div class="wrap">
+    <span class="flag">Internal &middot; Team 14</span>
+    <div class="sec-head"><span class="num">06</span><h2>Where we pick it up</h2></div>
+    <p class="sub col">Current state, and the design guidance for the next revision.</p>
+
+    <div class="col body-copy">
+      <p><strong>The machine is complete and the firmware on <code>main</code> is the build that drove.</strong> Drive and weapon were both tested and working on campus in spring 2026, and nothing mechanical is known broken. Before the next run it needs a charged pack and a quick bench check.</p>
+    </div>
+
+    <ul class="checklist">
+      <li><span class="k">Design v2</span><p><b>Re-model the frame around the loom</b>The cuts we made to the printed frame were all to clear wiring and connectors, not parts. Model the harness, meaning connector bodies, service loops and bend radius, into CAD before printing, and design channels for it instead of trimming afterward.</p></li>
+      <li><span class="k">Design v2</span><p><b>Make it serviceable without unbalancing the shell</b>Getting to the electronics currently means most of a teardown. Any access we add has to keep the ring balanced, because a spinning shell is unforgiving of asymmetric mass, so mirror any cutout on the opposite side or put the access in the drive base rather than the shell.</p></li>
+      <li><span class="k">Design v2</span><p><b>Treat the ring gear and pinion as wear parts</b>The entire weapon torque path runs through printed teeth. Inspect the ring and the pinion for rounded or chipped teeth before each run, keep the pinion shaft rigidly supported so mesh depth holds under load, and print spare pinions.</p></li>
+      <li><span class="k">Design v2</span><p><b>Strengthen where we cut</b>Every trimmed section is a thinner wall than the model intended. Reprint at the revised geometry rather than carrying forward parts that have been cut into, and reconsider infill and wall count on the shell specifically, since it is both the impact surface and the spinning mass.</p></li>
+      <li><span class="k">Design v2</span><p><b>Strain-relieve the solder joints</b>Much of the assembly is hand-soldered and rides inside a machine built to take impacts. Anchor the leads so vibration and hits land on the chassis, not on the joints.</p></li>
+      <li><span class="k">Firmware</span><p><b>Re-tune the ramps if the pack changes</b>The accel, decel and shell-ramp constants were tuned against the original pack's sag. A cell with different internal resistance will feel different, so expect a short retune, and raise the shell cap only once drive behaviour is confirmed.</p></li>
+      <li><span class="k">Nice to have</span><p><b>Battery telemetry</b>A voltage divider into a spare ADC pin and a low-voltage cutoff in the loop would let the bot look after its own pack mid-match, and flag a tired battery before it starts affecting drive.</p></li>
+      <li><span class="k">Housekeeping</span><p><b>Charge the pack</b>It went flat sitting over the summer without a top-up. Balance charge it and check the cells before the next run.</p></li>
+      <li><span class="k">Before driving</span><p><b>Re-arm and re-verify</b>Power up on the bench with the bot propped so the wheels are off the ground and the shell is clear. Confirm both ESCs arm through the 2-second sequence, confirm the gamepad pairs, and test the O-button stop before the shell goes anywhere near full.</p></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <p class="lbl">Team 14 &middot; UMass Robotics Club &middot; UMass Amherst</p>
+      <p class="lbl">Build documentation &middot; Spring 2026, updated August 2026</p>
+    </div>
+    <a class="repo-btn" href="https://github.com/JashKotadiya/Battlebots-Team-14">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      View the firmware on GitHub
+    </a>
+  </div>
+</footer>
+
+<div id="lb" hidden>
+  <button type="button" data-close aria-label="Close image">&times;</button>
+  <img alt="">
+  <figcaption></figcaption>
+</div>
+
+<script>
+(function(){
+  var ov=document.getElementById("lb"),
+      ovImg=ov.querySelector("img"),
+      ovCap=ov.querySelector("figcaption"),
+      btn=ov.querySelector("button"),
+      last=null;
+
+  function open(im){
+    last=im;
+    ovImg.src=im.src;
+    ovImg.alt=im.alt;
+    var fig=im.closest("figure"),
+        cap=fig?fig.querySelector("figcaption"):null;
+    ovCap.textContent=cap?cap.textContent:im.alt;
+    ov.hidden=false;
+    document.body.style.overflow="hidden";
+    btn.focus();
+  }
+  function close(){
+    ov.hidden=true;
+    ovImg.removeAttribute("src");
+    document.body.style.overflow="";
+    if(last){last.focus();last=null;}
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("img[data-zoom]"),function(im){
+    im.tabIndex=0;
+    im.setAttribute("role","button");
+    im.addEventListener("click",function(){open(im);});
+    im.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){e.preventDefault();open(im);}
+    });
+  });
+
+  ov.addEventListener("click",function(e){
+    if(e.target===ov||e.target===ovImg||e.target.hasAttribute("data-close")) close();
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&!ov.hidden) close();
+  });
+})();
+</script>

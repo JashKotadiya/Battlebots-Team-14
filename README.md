@@ -1,6 +1,6 @@
 # Battlebots Team 14
 
-### Full build documentation: https://jashkotadiya.github.io/Battlebots-Team-14/
+### Full build documentation: https://battlebots-team-14.github.io/Battlebots-Team-14/
 
 A 3D-printed antweight combat robot built by Team 14 at the UMass Robotics Club, UMass Amherst.
 

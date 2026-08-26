@@ -4,6 +4,8 @@
 
 A 3D-printed antweight combat robot built by Team 14 at the UMass Robotics Club, UMass Amherst.
 
+**Built by Jash Kotadiya, Ashutosh Mishra, and Alejandro Rodriguez.**
+
 The entire outer ring is the weapon. Gear teeth are printed around its inner wall and a pinion on
 the brushless motor meshes into them, so the whole shell spins around a two-wheel drive base. The
 site above covers the full build log with photos and video, the control system reference, the kit

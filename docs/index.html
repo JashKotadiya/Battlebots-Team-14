@@ -380,13 +380,30 @@ footer{padding:56px 0 72px; background:var(--surface)}
       <article class="entry">
         <div class="date">AUG 24<span>2026</span></div>
         <div>
-          <h3>Current condition</h3>
+          <h3>Version one today</h3>
           <p>The bot as it stands today, between seasons. The underside is the clearest look at how the weapon works: gear teeth run the full inner circumference of the red shell, and the black pinion at the lower right meshes straight into them. The bolted green plate is the floor of the drive base, with a wheel visible at each end.</p>
           <div class="shots">
             <figure><img data-zoom src="assets/16-current-underside.jpg" alt="Underside of the battlebot: the red ring shows fine gear teeth printed around its entire inner wall, with a black pinion gear on a metal shaft meshing into them, and a green bolted base plate between two dark treaded wheels."><figcaption>Underside: printed ring gear around the shell, pinion meshing at lower right.</figcaption></figure>
             <figure><img data-zoom src="assets/15-current-internals.jpg" alt="Close-up inside the bot showing a Readytosky 35A BLHeli_S electronic speed controller, a blue brushless outrunner motor, a brushed drive motor, a small blue dual brushed ESC, and dense wiring."><figcaption>Internals: the 35 A BLHeli_S weapon ESC, blue outrunner, and the dual brushed drive board.</figcaption></figure>
             <figure><img data-zoom src="assets/13-current-profile.jpg" alt="Low side-profile view of the battlebot on a hardwood floor, showing the height and wall thickness of the red printed shell with electronics visible above the rim."><figcaption>Side profile: shell height and wall thickness.</figcaption></figure>
-            <figure><img data-zoom src="assets/14-current-quarter.jpg" alt="Three-quarter view of the battlebot showing the blue brushless weapon motor, the ESP32 on the green chassis, wiring, and a drive wheel inside the red shell."><figcaption>Three-quarter: weapon motor, ESP32 and a drive wheel in one frame.</figcaption></figure>          </div>
+            <figure><img data-zoom src="assets/14-current-quarter.jpg" alt="Three-quarter view of the battlebot showing the blue brushless weapon motor, the ESP32 on the green chassis, wiring, and a drive wheel inside the red shell."><figcaption>Three-quarter: weapon motor, ESP32 and a drive wheel in one frame.</figcaption></figure>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="date">AUG 25<span>2026</span></div>
+        <div>
+          <h3>Version two in CAD</h3>
+          <p>The second revision started in CAD, and the two changes driving it come straight out of what the first machine taught us.</p>
+          <p>The first is the weapon drivetrain. The pinion is much larger, which cuts the reduction between the motor and the shell. The second is packaging: the electronics get a defined bay in the middle of the drive base rather than being threaded through whatever space was left over, which is exactly what forced the cuts into the printed frame the first time around.</p>
+          <p>The first parts are already off the printer.</p>
+          <div class="shots">
+            <figure><img data-zoom src="assets/20-cad-geartrain.jpg" alt="CAD view of the version two shell showing gear teeth around the full inner circumference meshing with a large pinion gear, with the drive motors and a central electronics bay inside."><figcaption>The new gear train. A much larger pinion means less reduction between the motor and the shell.</figcaption></figure>
+            <figure><img data-zoom src="assets/21-cad-internals.jpg" alt="CAD layout of the version two drive base showing two drive motors held in brackets, a central block for the electronics, and the weapon motor mounted to one side inside the shell."><figcaption>Layout: drive motors in brackets, a dedicated block for the electronics, weapon motor to one side.</figcaption></figure>
+            <figure><img data-zoom src="assets/22-cad-baseplate.jpg" alt="CAD view of the version two base plate seated inside the shell, with wheel slots at the top and bottom and a separate bolted bracket section to one side."><figcaption>Base plate with the wheel slots and the bolt pattern for the motor bracket.</figcaption></figure>
+            <figure><img data-zoom src="assets/23-v2-printed.jpg" alt="An orange 3D-printed version two shell section with printed ring gear teeth around its inner wall and a large printed pinion gear, plus a motor mount and bullet connector leads, with a pen alongside for scale."><figcaption>First version two parts off the printer: ring gear and the new pinion, in orange PLA.</figcaption></figure>
+          </div>
         </div>
       </article>
 
@@ -539,7 +556,7 @@ footer{padding:56px 0 72px; background:var(--surface)}
   <div class="wrap">
     <span class="flag">Internal &middot; Team 14</span>
     <div class="sec-head"><span class="num">06</span><h2>Where we pick it up</h2></div>
-    <p class="sub col">Current state, and the design guidance for the next revision.</p>
+    <p class="sub col">Current state, and the design guidance for the next revision, which is now being modelled.</p>
 
     <div class="col body-copy">
       <p><strong>The machine is complete and the firmware on <code>main</code> is the build that drove.</strong> Drive and weapon were both tested and working on campus in spring 2026, and nothing mechanical is known broken. Before the next run it needs a charged pack and a quick bench check.</p>
